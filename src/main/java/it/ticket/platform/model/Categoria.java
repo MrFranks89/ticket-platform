@@ -1,4 +1,5 @@
-package it.exam.model;
+package it.ticket.platform.model;
+
 import jakarta.persistence.*;
 
 @Entity

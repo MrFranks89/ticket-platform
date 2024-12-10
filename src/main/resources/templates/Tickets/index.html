@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets</title>
+</head>
+<body>
+    <h1>Elenco dei Tickets</h1>
+    
+    <form method="get" action="/tickets">
+        <input type="text" name="keyword" placeholder="Cerca ticket" value="${keyword}">
+        <button type="submit">Cerca</button>
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titolo</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ticket : ${list}">
+                <td th:text="${ticket.id}"></td>
+                <td th:text="${ticket.titolo}"></td>
+                <td>
+                    <a th:href="@{/tickets/{id}(id=${ticket.id})}">Dettagli</a>
+                    <a th:href="@{/tickets/edit/{id}(id=${ticket.id})}">Modifica</a>
+                    <form th:action="@{/tickets/delete/{id}(id=${ticket.id})}" method="post" style="display: inline;">
+                        <button type="submit">Elimina</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/tickets/create">Crea Nuovo Ticket</a>
+</body>
+</html>

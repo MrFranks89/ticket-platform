@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea Ticket</title>
+</head>
+<body>
+    <h1>Crea un Nuovo Ticket</h1>
+
+    <form method="post" action="/tickets/create" th:object="${ticket}">
+        <p>
+            <label for="titolo">Titolo:</label>
+            <input type="text" id="titolo" name="titolo" th:field="*{titolo}" required>
+        </p>
+        <p>
+            <label for="descrizione">Descrizione:</label>
+            <textarea id="descrizione" name="descrizione" th:field="*{descrizione}" required></textarea>
+        </p>
+        <button type="submit">Salva</button>
+    </form>
+
+    <a href="/tickets">Torna all'elenco</a>
+</body>
+</html>

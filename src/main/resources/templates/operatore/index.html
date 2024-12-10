@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Operatori</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Barra di navigazione -->
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/operatori">Operatori</a></li>
+        <li><a href="/ticket">Ticket</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</nav>
+
+<!-- Sezione principale -->
+<div class="container">
+    <h1>Gestione degli Operatori</h1>
+    
+    <!-- Lista degli operatori -->
+    <div class="operator-list">
+        <h2>Lista Operatori</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Disponibilità</th>
+                    <th>Ruolo</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="operatore : ${operatori}">
+                    <td th:text="${operatore.id}"></td>
+                    <td th:text="${operatore.nome}"></td>
+                    <td th:text="${operatore.cognome}"></td>
+                    <td th:text="${operatore.username}"></td>
+                    <td th:text="${operatore.email}"></td>
+                    <td th:text="${operatore.disponibile ? 'Disponibile' : 'Non disponibile'}"></td>
+                    <td th:text="${operatore.ruolo}"></td>
+                    <td>
+                        <a th:href="@{/operatori/{id}(id=${operatore.id})}">Dettagli</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>

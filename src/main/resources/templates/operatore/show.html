@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettagli Operatore</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Barra di navigazione -->
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/operatori">Operatori</a></li>
+        <li><a href="/ticket">Ticket</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</nav>
+
+<!-- Sezione principale -->
+<div class="container">
+    <h1>Dettagli Operatore</h1>
+
+    <!-- Dettagli dell'operatore -->
+    <div class="operatore-details">
+        <h2>Dettagli Operatore</h2>
+        <p><strong>Nome:</strong> <span th:text="${operatore.nome}"></span></p>
+        <p><strong>Cognome:</strong> <span th:text="${operatore.cognome}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${operatore.email}"></span></p>
+        <p><strong>Disponibilità:</strong> <span th:text="${operatore.disponibile ? 'Disponibile' : 'Non disponibile'}"></span></p>
+        <p><strong>Ruolo:</strong> <span th:text="${operatore.ruolo}"></span></p>
+    </div>
+
+    <!-- Ticket assegnati all'operatore -->
+    <div class="ticket-list">
+        <h2>Ticket Assegnati</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descrizione</th>
+                    <th>Data di creazione</th>
+                    <th>Stato</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ticket : ${assignedTickets}">
+                    <td th:text="${ticket.id}"></td>
+                    <td th:text="${ticket.descrizione}"></td>
+                    <td th:text="${ticket.dataCreazione}"></td>
+                    <td th:text="${ticket.stato}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettagli Ticket</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Barra di navigazione -->
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/operatori">Operatori</a></li>
+        <li><a href="/ticket">Ticket</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</nav>
+
+<!-- Sezione principale -->
+<div class="container">
+    <h1>Dettagli Ticket</h1>
+
+    <!-- Dettagli del ticket -->
+    <div class="ticket-details">
+        <h2>Dettagli Ticket</h2>
+        <p><strong>ID:</strong> <span th:text="${ticket.id}"></span></p>
+        <p><strong>Descrizione:</strong> <span th:text="${ticket.descrizione}"></span></p>
+        <p><strong>Data di creazione:</strong> <span th:text="${ticket.dataCreazione}"></span></p>
+        <p><strong>Stato:</strong> <span th:text="${ticket.stato}"></span></p>
+    </div>
+
+    <!-- Operatore assegnato al ticket -->
+    <div class="operatore-assigned">
+        <h2>Operatore Assegnato</h2>
+        <p><strong>Nome:</strong> <span th:text="${operatore != null ? operatore.nome : 'Nessun operatore assegnato'}"></span></p>
+        <p><strong>Cognome:</strong> <span th:text="${operatore != null ? operatore.cognome : ''}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${operatore != null ? operatore.email : ''}"></span></p>
+    </div>
+
+</div>
+
+</body>
+</html>
