@@ -61,7 +61,7 @@ public class AdminController {
 		return "admin/tickets";
 	}
 
-	// Mostra il form per creare un nuovo ticket
+
 	@GetMapping("/{id}/tickets/create")
 	public String createTicket(@PathVariable Long id, Model model) {
 		Admin admin = adminRepository.findById(id)
@@ -72,7 +72,7 @@ public class AdminController {
 		return "admin/create_ticket";
 	}
 
-	// Salva un nuovo ticket
+
 	@PostMapping("/{id}/tickets/create")
 	public String storeTicket(@PathVariable Long id, @Valid @ModelAttribute("ticket") Ticket ticket,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -87,7 +87,7 @@ public class AdminController {
 		return "redirect:/admin/" + id + "/tickets";
 	}
 
-	// Mostra il form per assegnare un ticket a un operatore
+
 	@GetMapping("/{adminId}/tickets/{ticketId}/assign")
 	public String assignTicketForm(@PathVariable Long adminId, @PathVariable Long ticketId, Model model) {
 		Ticket ticket = ticketRepository.findById(ticketId)
@@ -98,7 +98,7 @@ public class AdminController {
 		return "admin/assign_ticket";
 	}
 
-	// Assegna un ticket a un operatore
+
 	@PostMapping("/{adminId}/tickets/{ticketId}/assign")
 	public String assignTicket(@PathVariable Long adminId, @PathVariable Long ticketId, @RequestParam Long operatoreId,
 			RedirectAttributes redirectAttributes) {
@@ -111,4 +111,6 @@ public class AdminController {
 		redirectAttributes.addFlashAttribute("successMessage", "Ticket assegnato con successo!");
 		return "redirect:/admin/" + adminId + "/tickets";
 	}
+	
+	
 }

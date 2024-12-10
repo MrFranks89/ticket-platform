@@ -31,7 +31,7 @@ public class Operatore implements UserDetailsSource {
     private List<Ticket> tickets;
     
   @ManyToMany(fetch = FetchType.EAGER)
-	private List<Ruoli> roles;
+	private List<Roles> roles;
     
   private String ruolo;
 
@@ -103,11 +103,11 @@ public class Operatore implements UserDetailsSource {
         this.tickets = tickets;
     }
 
-	public List<Ruoli> getRoles() {
+	public List<Roles> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Ruoli> roles) {
+	public void setRoles(List<Roles> roles) {
 		this.roles = roles;
 	}
 
@@ -120,7 +120,7 @@ public class Operatore implements UserDetailsSource {
 	}
 
 	public Operatore(Long id, String nome, String cognome, String username, String email, String password,
-			boolean disponibile, List<Ticket> tickets, List<Ruoli> roles, String ruolo) {
+			boolean disponibile, List<Ticket> tickets, List<Roles> roles, String ruolo) {
 		super();
 		this.id = id;
 		this.nome = nome;

@@ -9,8 +9,11 @@ import it.ticket.platform.model.Ticket;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	
-	 List<Ticket> findByOperatoreId(Long operatoreId);
+	// List<Ticket> findByOperatoreId(Long operatoreId);
 
-	List<Ticket> findByTitoloContaining(String keyword);
+	//List<Ticket> findByTitoloContaining(String keyword);
+	
+	List<Ticket> findByStato(String stato);
+    List<Ticket> findByDataCreazioneBetween(LocalDateTime start, LocalDateTime end);
 
 }

@@ -31,7 +31,7 @@ public class Admin implements UserDetailsSource {
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	private List<Ruoli> roles;
+	private List<Roles> roles;
 	
 	@OneToMany(mappedBy = "admin", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
@@ -101,12 +101,12 @@ public class Admin implements UserDetailsSource {
 
 	
 
-	public List<Ruoli> getRoles() {
+	public List<Roles> getRoles() {
 		return roles;
 	}
 
 
-	public void setRoles(List<Ruoli> roles) {
+	public void setRoles(List<Roles> roles) {
 		this.roles = roles;
 	}
 
@@ -122,7 +122,7 @@ public class Admin implements UserDetailsSource {
 
 
 	public Admin(Long id, String nome, String cognome, String username, String email, String password,
-			List<Ruoli> roles, List<Ticket> tickets, String ruolo) {
+			List<Roles> roles, List<Ticket> tickets, String ruolo) {
 		super();
 		this.id = id;
 		this.nome = nome;

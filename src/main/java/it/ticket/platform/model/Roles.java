@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Ruoli {
+public class Roles {
 	@Id
 	private long id;
 
@@ -27,4 +27,6 @@ public class Ruoli {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }
+

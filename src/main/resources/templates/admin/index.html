@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Barra di navigazione -->
+<nav>
+    <ul>
+        <li><a href="/admin">Dashboard</a></li>
+        <li><a href="/tickets">Gestione Ticket</a></li>
+        <li><a href="/operatori">Gestione Operatori</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</nav>
+
+<!-- Contenuto principale -->
+<div class="container">
+    <h1>Benvenuto, Admin</h1>
+    <p>Seleziona un'opzione dal menu per iniziare.</p>
+
+    <!-- Sezione di riepilogo -->
+    <div class="summary">
+        <div class="card">
+            <h2>Ticket Totali</h2>
+            <p th:text="${ticketCount}">0</p>
+        </div>
+        <div class="card">
+            <h2>Operatori Totali</h2>
+            <p th:text="${operatoreCount}">0</p>
+        </div>
+        <div class="card">
+            <h2>Ticket Assegnati</h2>
+            <p th:text="${ticketAssegnatiCount}">0</p>
+        </div>
+    </div>
+
+    <!-- Lista dei ticket recenti -->
+    <div class="recent-tickets">
+        <h2>Ultimi Ticket</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titolo</th>
+                    <th>Stato</th>
+                    <th>Operatore</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Iterazione sui ticket -->
+                <tr th:each="ticket : ${recentTickets}">
+                    <td th:text="${ticket.id}"></td>
+                    <td th:text="${ticket.titolo}"></td>
+                    <td th:text="${ticket.stato}"></td>
+                    <td th:text="${ticket.operatore != null ? ticket.operatore.username : 'Non assegnato'}"></td>
+                    <td>
+                        <a th:href="@{/tickets/show/{id}(id=${ticket.id})}">Visualizza</a>
+                        <a th:href="@{/tickets/edit/{id}(id=${ticket.id})}">Modifica</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Lista degli operatori -->
+    <div class="operator-list">
+        <h2>Operatori</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Ticket Assegnati</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Iterazione sugli operatori -->
+                <tr th:each="operatore : ${operatori}">
+                    <td th:text="${operatore.id}"></td>
+                    <td th:text="${operatore.nome}"></td>
+                    <td th:text="${operatore.email}"></td>
+                    <td th:text="${operatore.tickets.size()}">0</td>
+                    <td>
+                        <a th:href="@{/operatori/{id}(id=${operatore.id})}">Dettagli</a>
+                        <a th:href="@{/operatori/edit/{id}(id=${operatore.id})}">Modifica</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

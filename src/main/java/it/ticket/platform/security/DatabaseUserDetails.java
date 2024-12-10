@@ -8,8 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import it.ticket.platform.model.Admin;
 import it.ticket.platform.model.Operatore;
-import it.ticket.platform.model.Ruoli;
+import it.ticket.platform.model.Roles;
 import it.ticket.platform.repository.UserDetailsSource;
 
 public class DatabaseUserDetails implements UserDetails {
@@ -19,16 +20,27 @@ public class DatabaseUserDetails implements UserDetails {
 	private final String password;
 	private final Set<GrantedAuthority> authorities;
 
-	public DatabaseUserDetails(UserDetailsSource user) {
-		this.id = user.getId();
-		this.username = user.getUsername();
-		this.password = user.getPassword();
+	public DatabaseUserDetails(Admin admin) {
+        this.id = admin.getId();
+        this.username = admin.getUsername();
+        this.password = admin.getPassword();
 
-		this.authorities = new HashSet<>();
-		for (Ruoli role : user.getRoles()) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-		}
-	}
+        this.authorities = new HashSet<>();
+        for (Roles role : admin.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())); // Supponendo che `Ruoli.getNome()` restituisca il nome del ruolo
+        }
+    }
+	
+	  public DatabaseUserDetails(Operatore operatore) {
+	        this.id = operatore.getId();
+	        this.username = operatore.getUsername();
+	        this.password = operatore.getPassword();
+
+	        this.authorities = new HashSet<>();
+	        for (Roles role : operatore.getRoles()) {
+	            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+	        }
+	    }
 
 	public Long getId() {
 		return id;
