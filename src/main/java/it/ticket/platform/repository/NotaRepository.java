@@ -9,5 +9,5 @@ import it.ticket.platform.model.Ticket;
 
 public interface NotaRepository extends JpaRepository<Nota, Long> {
 
-	List<Nota> findByTicket(Ticket ticket);
+	List<Nota> findByTicketId(Long ticketId);
 }

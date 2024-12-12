@@ -45,16 +45,16 @@
 						<td th:text="${ticket.categoria.nome}"></td>
 						<td th:text="${ticket.note}"></td>
 						<td>
-							<a class="btn btn-primary" th:href="@{/tickets/show/{id}(id=${ticket.id})}"><i
-									class="fa-solid fa-ticket"></i></a>
-							<a class="btn btn-success" th:href="@{|/tickets/edit/${ticket.id}|}"><i
+							<a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Dettagli<i
+									class="fas fa-ticket"></i></a>
+							<a th:href="@{|/tickets/edit/${ticket.id}|}" class="btn btn-success">Modifica<i
 									class="fas fa-edit"></i></a>
 						</td>
 						<td>
 							<form th:action="@{'/tickets/delete/{id}'(id=${ticket.id})}" method="post"
 								style="display:inline-block;" sec:authorize="hasAuthority('ADMIN')">
 								<button class="btn btn-danger" type="submit"
-									onclick="return confirm('Vuoi eliminare questo ticket?')"><i
+									onclick="return confirm('Vuoi eliminare questo ticket?')">Elimina<i
 										class="fas fa-trash"></i></button>
 							</form>
 						</td>

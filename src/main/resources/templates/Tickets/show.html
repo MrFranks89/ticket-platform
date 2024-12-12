@@ -10,7 +10,7 @@
 
 <body>
 
-	<!-- Barra di navigazione -->
+
 	<nav>
 		<ul>
 			<li><a href="/home">Home</a></li>
@@ -20,11 +20,11 @@
 		</ul>
 	</nav>
 
-	<!-- Sezione principale -->
+
 	<div class="container">
 		<h1>Dettagli del Ticket</h1>
 
-		<!-- Dettagli del ticket -->
+
 		<div class="ticket-details">
 			<p><strong>ID:</strong> <span th:text="${ticket.id}"></span></p>
 			<p><strong>Descrizione:</strong> <span th:text="${ticket.descrizione}"></span></p>
@@ -33,7 +33,7 @@
 			<p><strong>Ultima Modifica:</strong> <span th:text="${ticket.dataModifica}"></span></p>
 		</div>
 
-		<!-- Informazioni sull'operatore -->
+
 		<div class="operatore-details">
 			<h2>Operatore Assegnato</h2>
 			<p th:if="${ticket.operatore != null}">
@@ -44,6 +44,32 @@
 				Nessun operatore assegnato.
 			</p>
 		</div>
+		
+		<div class="note">
+		    <h2>Note</h2>
+		    <div th:each="nota : ${ticket.note}">
+		        <div class="nota-item">
+		            <p><strong>Autore:</strong> <span th:text="${nota.operatore.username}"></span></p>
+		            <p><strong>Data Creazione:</strong> <span th:text="${nota.dataCreazione}"></span></p>
+		            <p><strong>Testo:</strong></p>
+		            <p th:text="${nota.testo}"></p>
+		        </div>
+		        <hr/>
+		    </div>
+
+		    <form th:action="@{/note/create}" method="post">
+		        <div class="form-group">
+		            <label for="testo">Aggiungi una nuova nota:</label>
+		            <textarea class="form-control" id="testo" name="testo" rows="3" placeholder="Scrivi qui la tua nota..." required></textarea>
+		        </div>
+		        <input type="hidden" name="ticketId" th:value="${ticket.id}"> <!-- Nascondi l'ID del ticket -->
+		        <button type="submit" class="btn btn-primary mt-3">Aggiungi Nota</button>
+		    </form>
+		</div>
+		
+		<a href="/tickets" class="back-btn">Torna all'elenco dei ticket</a>
+		
+		
 	</div>
 
 </body>

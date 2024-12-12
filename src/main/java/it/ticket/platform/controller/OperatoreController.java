@@ -43,7 +43,6 @@ public class OperatoreController {
 		
 		
 		List<Ticket> assignedTickets = ticketRepository.findByOperatoreId(id);
-		System.out.println("Assigned tickets: " + assignedTickets);
         model.addAttribute("assignedTickets", assignedTickets);
         
 

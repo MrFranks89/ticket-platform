@@ -33,15 +33,22 @@ public class Nota {
     private LocalDateTime dataModifica;
 
     @ManyToOne
-    @JoinColumn(name = "autore_id")
-    private Operatore autore;
+    @JoinColumn(name = "operatore_id")
+    private Operatore operatore;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
     @JsonBackReference
     private Ticket ticket;
-
+    
     public Nota() {
+    	
+    }
+
+    public Nota(Operatore operatore, String testo, Ticket ticket) {
+    	this.operatore = operatore;
+    	this.testo = testo;
+    	this.ticket = ticket;
     	 this.dataCreazione = LocalDateTime.now();
     }
 
@@ -77,15 +84,15 @@ public class Nota {
 		this.dataModifica = dataModifica;
 	}
 
-	public Operatore getAutore() {
-        return autore;
-    }
+    public Operatore getOperatore() {
+		return operatore;
+	}
 
-    public void setAutore(Operatore autore) {
-        this.autore = autore;
-    }
+	public void setOperatore(Operatore operatore) {
+		this.operatore = operatore;
+	}
 
-    public Ticket getTicket() {
+	public Ticket getTicket() {
         return ticket;
     }
 
@@ -93,14 +100,11 @@ public class Nota {
         this.ticket = ticket;
     }
 
-    @Override
-    public String toString() {
-        return "Nota{" +
-                "id=" + id +
-                ", testo='" + testo + '\'' +
-                ", dataCreazione=" + dataCreazione +
-                ", autore=" + (autore != null ? autore.getId() : null) +
-                ", ticket=" + (ticket != null ? ticket.getId() : null) +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Nota [id=" + id + ", testo=" + testo + ", dataCreazione=" + dataCreazione + ", dataModifica="
+				+ dataModifica + ", operatore=" + operatore + ", ticket=" + ticket + "]";
+	}
+
+ 
 }

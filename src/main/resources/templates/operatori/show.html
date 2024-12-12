@@ -1,83 +1,89 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<div th:replace="~{fragments :: head}"></div>
-    <title>Dettagli Operatore</title>
-    <link rel="stylesheet" href="/css/styles.css">
+	<title>Dettagli Operatore</title>
+	<link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
 	<nav th:replace="~{navbar :: navbar('operatori')}"> </nav>
-<!-- Barra di navigazione -->
+	<!-- Barra di navigazione -->
 
 
 
-<div class="container">
-    <h1>Dettagli Operatore</h1>
+	<div class="container">
+		<h1>Dettagli Operatore</h1>
 
 
-    <div class="operatore-details">
-        <h2>Dettagli Operatore</h2>
-        <p><strong>Nome:</strong> <span th:text="${operatore.nome}"></span></p>
-        <p><strong>Cognome:</strong> <span th:text="${operatore.cognome}"></span></p>
-        <p><strong>Email:</strong> <span th:text="${operatore.email}"></span></p>
-        <p><strong>Disponibilità:</strong> <span th:text="${operatore.disponibile ? 'Disponibile' : 'Non disponibile'}"></span></p>
-        <p><strong>Ruolo:</strong> <span th:text="${operatore.ruolo}"></span></p>
-    </div>
+		<div class="operatore-details">
+			<h2>Dettagli Operatore</h2>
+			<p><strong>Nome:</strong> <span th:text="${operatore.nome}"></span></p>
+			<p><strong>Cognome:</strong> <span th:text="${operatore.cognome}"></span></p>
+			<p><strong>Email:</strong> <span th:text="${operatore.email}"></span></p>
+			<p><strong>Disponibilità:</strong> <span
+					th:text="${operatore.disponibile ? 'Disponibile' : 'Non disponibile'}"></span></p>
+			<p><strong>Ruolo:</strong> <span th:text="${operatore.ruolo}"></span></p>
+		</div>
 
-	<form action="#" th:action="@{/operatori/updateStatus/{id}(id=${operatore.id})}" method="post">
-	    <div class="form-group">
-	        <label for="disponibile">Disponibile</label>
-	        <select id="disponibile" name="disponibile" class="form-select">
-	            <option th:selected="${operatore.disponibile}" th:value="true">Disponibile</option>
-	            <option th:if="${!operatore.disponibile}" th:selected="${!operatore.disponibile}" th:value="false">Non Disponibile</option>
-	        </select>
-	    </div>
-	    <button type="submit" class="btn btn-primary">Aggiorna Stato</button>
-	</form>
+		<form action="#" th:action="@{/operatori/updateStatus/{id}(id=${operatore.id})}" method="post">
+			<div class="form-group">
+				<label for="disponibile">Disponibile</label>
+				<select id="disponibile" name="disponibile" class="form-select">
+					<option th:selected="${operatore.disponibile}" th:value="true">Disponibile</option>
+					<option th:selected="${!operatore.disponibile}" th:value="false">Non Disponibile</option>
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary">Aggiorna Stato</button>
+		</form>
 
-    <div class="ticket-list">
-		<h2>Ticket Assegnati</h2>
-		<table class="table">
-		    <thead>
-		        <tr>
-		            <th>Ticket ID</th>
-		            <th>Titolo</th>
-		            <th>Descrizione</th>
-		            <th>Stato</th>
-		            <th>Azione</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-		        <tr th:each="ticket : ${assignedTickets}">
-		            <td th:text="${ticket.id}">ID Ticket</td>
-		            <td th:text="${ticket.titolo}">Titolo Ticket</td>
-		            <td th:text="${ticket.descrizione}">Descrizione Ticket</td>
-		            <td th:text="${ticket.stato}">Stato Ticket</td>
-		            <td>
-		                <!-- Form per aggiornare lo stato del ticket -->
-		                <form th:action="@{/tickets/updateTicketStatus/{id}(id=${ticket.id})}" method="post">
-		                    <div class="form-group">
-		                        <label for="stato">Stato</label>
-		                        <select id="stato" name="stato" class="form-select">
-		                            <option th:selected="${ticket.stato == 'da fare'}" th:value="'da fare'">Da Fare</option>
-		                            <option th:selected="${ticket.stato == 'in corso'}" th:value="'in corso'">In Corso</option>
-		                            <option th:selected="${ticket.stato == 'completato'}" th:value="'completato'">Completato</option>
-		                        </select>
-		                    </div>
-		                    <button type="submit" class="btn btn-primary">Aggiorna Stato</button>
-		                </form>
-		            </td>
-		        </tr>
-				<tr th:if="${assignedTickets.isEmpty()}">
-				               <td colspan="5">Nessun ticket assegnato.</td>
-				           </tr>
-		    </tbody>
-		</table>
-    </div>
+		<div class="ticket-list">
+			<h2>Ticket Assegnati</h2>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Ticket ID</th>
+						<th>Titolo</th>
+						<th>Descrizione</th>
+						<th>Stato</th>
+						<th>Azione</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="ticket : ${assignedTickets}">
+						<td th:text="${ticket.id}">ID Ticket</td>
+						<td th:text="${ticket.titolo}">Titolo Ticket</td>
+						<td th:text="${ticket.descrizione}">Descrizione Ticket</td>
+						<td th:text="${ticket.stato}">Stato Ticket</td>
+						<td>
+							<!-- Form per aggiornare lo stato del ticket -->
+							<form th:action="@{/tickets/updateTicketStatus/{id}(id=${ticket.id})}" method="post">
+								<div class="form-group">
+									<select id="stato" name="stato" class="form-select">
+										<option th:selected="${ticket.stato == 'da fare'}" th:value="'da fare'">Da Fare
+										</option>
+										<option th:selected="${ticket.stato == 'in corso'}" th:value="'in corso'">In
+											Corso</option>
+										<option th:selected="${ticket.stato == 'completato'}" th:value="'completato'">
+											Completato</option>
+									</select>
+								</div>
+								<button type="submit" class="btn btn-primary">Aggiorna Stato</button>
+							</form>
+						</td>
+					</tr>
+					<tr th:if="${assignedTickets.isEmpty()}">
+						<td colspan="5">Nessun ticket assegnato.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-</div>
-<div th:replace="~{fragments :: scripts}"></div>
+	</div>
+	<div th:replace="~{fragments :: scripts}"></div>
 </body>
+
 </html>

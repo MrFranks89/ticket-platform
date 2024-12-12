@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.ticket.platform.model.Admin;
 import it.ticket.platform.model.Nota;
+import it.ticket.platform.model.Operatore;
 import it.ticket.platform.model.Ticket;
 import it.ticket.platform.repository.NotaRepository;
 import it.ticket.platform.repository.TicketRepository;
@@ -31,53 +32,58 @@ public class NoteController {
 
 	@Autowired
 	private TicketRepository ticketRepository;
-
-	/*@GetMapping
-	public String index(Model model) {
-		List<Nota> allNote = notaRepository.findAll();
-		model.addAttribute("note", allNote);
-		model.addAttribute("nota", new Nota());
-		return "note/index";
-	}
-
-	@GetMapping("/{id}")
-	public String showNota(@PathVariable Long id, Model model) {
-		Nota nota = notaRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Admin non trovato con id: " + id));
-		model.addAttribute("nota", nota);
-		return "nota/show";
-	}*/
 	
 	@GetMapping("/create")
 	public String creaNota(@RequestParam(required = false) Long ticketId, Model model) {
-		Nota nuovaNota = new Nota();
-		if (ticketId != null) {
-			Ticket ticket = ticketRepository.findById(ticketId)
-					.orElseThrow(() -> new IllegalArgumentException("Ticket non trovato"));
-			nuovaNota.setTicket(ticket);
-		}
-		model.addAttribute("nota", nuovaNota);
-		model.addAttribute("ticket", ticketRepository.findAll());
-		return "note/create";
+	    Ticket ticket = ticketRepository.findById(ticketId)
+	            .orElseThrow(() -> new IllegalArgumentException("Ticket non trovato con id: " + ticketId));
+
+	    model.addAttribute("ticket", ticket);
+	    model.addAttribute("nota", new Nota());
+	    return "note/create";
+	}
+	
+	@PostMapping("/tickets/{id}/note/add")
+	public String aggiungiNota(@PathVariable Long id, @RequestParam String testo) {
+	    // Recupera il ticket dal repository
+	    Ticket ticket = ticketRepository.findById(id)
+	            .orElseThrow(() -> new IllegalArgumentException("Ticket non trovato con id: " + id));
+
+	    // Recupera l'operatore associato (adatta secondo la tua logica)
+	    Operatore operatore = ticket.getOperatore();
+	    if (operatore == null) {
+	        throw new IllegalArgumentException("Operatore non trovato per il ticket con id: " + id);
+	    }
+
+	    // Crea e salva la nota
+	    Nota nota = new Nota(operatore, testo, ticket);
+	    notaRepository.save(nota);
+
+	    // Reindirizza alla stessa pagina del ticket
+	    return "redirect:/tickets/show/" + id;
 	}
 
 	@PostMapping("/create")
 	public String creaNota(@Valid @ModelAttribute("nota") Nota nota, BindingResult bindingResult,
-			@RequestParam(required = false) Long ticketId, @RequestParam(required = false) Model model) {
+	        @RequestParam(required = false) Long ticketId, Model model) {
 
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("ticket", ticketRepository.findAll());
-			return "note/create";
-		}
+	    if (bindingResult.hasErrors()) {
+	        if (ticketId != null) {
+	            Ticket ticket = ticketRepository.findById(ticketId)
+	                    .orElseThrow(() -> new IllegalArgumentException("Ticket non trovato"));
+	            model.addAttribute("ticket", ticket); // Ripristina il ticket nel modello
+	        }
+	        return "note/create";
+	    }
 
-		if (ticketId != null) {
-			Ticket ticket = ticketRepository.findById(ticketId)
-					.orElseThrow(() -> new IllegalArgumentException("Ticket non trovato"));
-			nota.setTicket(ticket);
-		}
+	    if (ticketId != null) {
+	        Ticket ticket = ticketRepository.findById(ticketId)
+	                .orElseThrow(() -> new IllegalArgumentException("Ticket non trovato"));
+	        nota.setTicket(ticket);
+	    }
 
-		notaRepository.save(nota);
-		return "redirect:/ticket/show/" + nota.getTicket().getId();
+	    notaRepository.save(nota);
+	    return "redirect:/ticket/show/" + nota.getTicket().getId();
 	}
 
 	@GetMapping("/edit/{id}")

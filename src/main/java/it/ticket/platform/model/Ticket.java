@@ -28,10 +28,10 @@ public class Ticket {
 
 	private String stato;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	private LocalDateTime dataCreazione;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	private LocalDateTime dataModifica;
 
 	@ManyToOne
@@ -43,11 +43,11 @@ public class Ticket {
 	private Categoria categoria;
 	
 
-	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Nota> note = new ArrayList<>();
+	@OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
+	private List<Nota> note;
 	
-	@ManyToOne
-	@JoinColumn(name = "admin_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "admin_id", nullable = true)
 	private Admin admin;
 
 	public Ticket() {

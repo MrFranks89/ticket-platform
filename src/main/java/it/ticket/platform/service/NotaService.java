@@ -28,21 +28,18 @@ public class NotaService {
 
 	public Nota addNotaToTicket(Long ticketId, String testo) {
 		Ticket ticket = ticketRepository.findById(ticketId)
-				.orElseThrow(() -> new EntityNotFoundException("Ticket non trovato con id: " + ticketId));
+	            .orElseThrow(() -> new EntityNotFoundException("Ticket non trovato con id: " + ticketId));
 
-		Operatore autore = (Operatore) ticket.getOperatore();
-		
-		  if (autore == null) {
-	            throw new EntityNotFoundException("Operatore non trovato per il ticket con id: " + ticketId);
-	        }
+	    Operatore operatore = ticket.getOperatore();
 
-		Nota nota = new Nota();
-		nota.setTesto(testo);
-		nota.setAutore(autore);
-		nota.setDataCreazione(LocalDateTime.now());
-		nota.setTicket(ticket);
 
-		return notaRepository.save(nota);
+	    if (operatore == null) {
+	        throw new EntityNotFoundException("Operatore non trovato per il ticket con id: " + ticketId);
+	    }
+
+	    Nota nota = new Nota(operatore, testo, ticket);
+
+	    return notaRepository.save(nota);
 	}
 
 }
