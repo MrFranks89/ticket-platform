@@ -3,26 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<div th:replace="~{fragments :: head}"></div>
     <title>Dettagli Operatore</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-
+	<nav th:replace="~{navbar :: navbar('operatori')}"> </nav>
 <!-- Barra di navigazione -->
-<nav>
-    <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/operatori">Operatori</a></li>
-        <li><a href="/ticket">Ticket</a></li>
-        <li><a href="/logout">Logout</a></li>
-    </ul>
-</nav>
 
-<!-- Sezione principale -->
+
+
 <div class="container">
     <h1>Dettagli Operatore</h1>
 
-    <!-- Dettagli dell'operatore -->
+
     <div class="operatore-details">
         <h2>Dettagli Operatore</h2>
         <p><strong>Nome:</strong> <span th:text="${operatore.nome}"></span></p>
@@ -32,7 +26,17 @@
         <p><strong>Ruolo:</strong> <span th:text="${operatore.ruolo}"></span></p>
     </div>
 
-    <!-- Ticket assegnati all'operatore -->
+	<form action="#" th:action="@{/operatori/updateStatus/{id}(id=${operatore.id})}" method="post">
+	    <div class="form-group">
+	        <label for="disponibile">Disponibile</label>
+	        <select id="disponibile" name="disponibile" class="form-select">
+	            <option th:selected="${operatore.disponibile}" th:value="true">Disponibile</option>
+	            <option th:if="${!operatore.disponibile}" th:selected="${!operatore.disponibile}" th:value="false">Non Disponibile</option>
+	        </select>
+	    </div>
+	    <button type="submit" class="btn btn-primary">Aggiorna Stato</button>
+	</form>
+
     <div class="ticket-list">
         <h2>Ticket Assegnati</h2>
         <table>
@@ -54,8 +58,20 @@
             </tbody>
         </table>
     </div>
+	
+	<form action="#" th:action="@{/tickets/updateTicketStatus/{id}(id=${ticket.id})}" method="post">
+	    <div class="form-group">
+	        <label for="stato">Stato del Ticket</label>
+	        <select id="stato" name="stato" class="form-select">
+	            <option th:selected="${ticket.stato == 'da fare'}" th:value="da fare">Da Fare</option>
+	            <option th:selected="${ticket.stato == 'in corso'}" th:value="in corso">In Corso</option>
+	            <option th:selected="${ticket.stato == 'completato'}" th:value="completato">Completato</option>
+	        </select>
+	    </div>
+	    <button type="submit" class="btn btn-primary">Aggiorna Stato del ticket</button>
+	</form>
 
 </div>
-
+<div th:replace="~{fragments :: scripts}"></div>
 </body>
 </html>

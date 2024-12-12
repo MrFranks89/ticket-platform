@@ -1,7 +1,15 @@
 package it.ticket.platform.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Nota {
@@ -10,9 +18,19 @@ public class Nota {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotBlank
     private String testo;
 
+    @NotNull(message = "La data di creazione non può essere vuota")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@FutureOrPresent
     private LocalDateTime dataCreazione;
+    
+    @NotNull(message = "La data di modifica non può essere vuota")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@FutureOrPresent
+    private LocalDateTime dataModifica;
 
     @ManyToOne
     @JoinColumn(name = "autore_id")
@@ -20,9 +38,12 @@ public class Nota {
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
+    @JsonBackReference
     private Ticket ticket;
 
-    public Nota() {}
+    public Nota() {
+    	 this.dataCreazione = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
@@ -48,7 +69,15 @@ public class Nota {
         this.dataCreazione = dataCreazione;
     }
 
-    public Operatore getAutore() {
+    public LocalDateTime getDataModifica() {
+		return dataModifica;
+	}
+
+	public void setDataModifica(LocalDateTime dataModifica) {
+		this.dataModifica = dataModifica;
+	}
+
+	public Operatore getAutore() {
         return autore;
     }
 

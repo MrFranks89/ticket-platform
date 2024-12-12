@@ -1,25 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifica Ticket</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<div th:replace="~{fragments :: head}"></div>
+	<title>Crea Ticket</title>
+	<style>
+		/* Reset generale */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Arial', sans-serif;
+			background-color: #f4f6f9;
+			color: #333;
+			line-height: 1.6;
+		}
+
+		h1 {
+			text-align: center;
+			margin-top: 20px;
+			color: #4CAF50;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: white;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+		}
+
+		/* Stile form */
+		form {
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		input,
+		textarea,
+		select {
+			padding: 10px;
+			font-size: 1rem;
+			border-radius: 5px;
+			border: 1px solid #ddd;
+		}
+
+		input[type="text"],
+		input[type="date"] {
+			width: 100%;
+		}
+
+		textarea {
+			width: 100%;
+			height: 150px;
+			resize: vertical;
+		}
+
+		select {
+			width: 100%;
+		}
+
+		button[type="submit"] {
+			padding: 10px 20px;
+			font-size: 1rem;
+			border-radius: 5px;
+			border: 1px solid #ddd;
+			background-color: #4CAF50;
+			color: white;
+			cursor: pointer;
+			transition: background-color 0.3s;
+			width: 100%;
+		}
+
+		button[type="submit"]:hover {
+			background-color: #45a049;
+		}
+
+		/* Pulsante indietro */
+		.back-btn {
+			display: inline-block;
+			text-align: center;
+			background-color: #f44336;
+			color: white;
+			padding: 10px 20px;
+			border-radius: 5px;
+			text-decoration: none;
+			font-size: 1rem;
+			transition: background-color 0.3s;
+		}
+
+		.back-btn:hover {
+			background-color: #e53935;
+		}
+
+		/* Messaggio di successo */
+		.success-message {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px;
+			text-align: center;
+			border-radius: 5px;
+			margin-bottom: 20px;
+		}
+
+		/* Adattamenti per dispositivi mobili */
+		@media (max-width: 768px) {
+			.container {
+				padding: 15px;
+			}
+
+			form input,
+			form textarea,
+			form select,
+			button[type="submit"] {
+				width: 100%;
+			}
+		}
+	</style>
 </head>
+
 <body>
-    <h1>Modifica Ticket</h1>
+	<nav th:replace="~{navbar :: navbar('tickets')}"> </nav>
 
-    <form method="post" th:action="@{/tickets/edit/{id}(id=${ticket.id})}" th:object="${ticket}">
-        <p>
-            <label for="titolo">Titolo:</label>
-            <input type="text" id="titolo" name="titolo" th:field="*{titolo}" readonly>
-        </p>
-        <p>
-            <label for="descrizione">Descrizione:</label>
-            <textarea id="descrizione" name="descrizione" th:field="*{descrizione}" required></textarea>
-        </p>
-        <button type="submit">Aggiorna</button>
-    </form>
+	<div class="container form-container">
+		<h1 class="d-flex justify-content-center">Crea un Nuovo Ticket</h1>
+		<form id="ticket-form" th:object="${ticket}" th:action="@{/tickets/create}" th:method="post" class="row g-3">
+			<div class="col-md-12 form-group">
+				<label for="titolo" class="form-label">Titolo</label>
+				<input type="text" class="form-control" id="titolo" th:errorClass="is-invalid" placeholder="Titolo"
+					th:field="*{titolo}">
+				<div th:if="${#fields.hasErrors('titolo')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('titolo')}" th:text="${err}">
+						</li>
+					</ul>
+				</div>
 
-    <a href="/tickets">Torna all'elenco</a>
+			</div>
+
+
+			<div class="col-md-12 form-group">
+				<label for="descrizione" class="form-label">Descrizione</label>
+				<textarea id="descrizione" th:errorClass="is-invalid" name="descrizione"
+					placeholder="Descrivi il problema o la richiesta" th:field="*{descrizione}" required></textarea>
+
+				<div th:if="${#fields.hasErrors('descrizione')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('descrizione')}" th:text="${err}">
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<select class="form-select form-select-sm" aria-label="Small select example">
+			  <option selected>Modifica Stato</option>
+			  <option value="1">Da fare</option>
+			  <option value="2">In corso</option>
+			  <option value="3">Completato</option>
+			</select>
+			
+			<select class="form-select form-select-sm" aria-label="Small select example">
+			  <option selected>Categorie</option>
+			  <option value="1">Problemi Tecnici</option>
+			  <option value="2">Richieste di Assistenza</option>
+			  <option value="3">Segnalazioni</option>
+			  <option value="4">Richieste Amministrative</option>
+			  <option value="5">Manutenzione</option>
+			</select>
+
+			<div th:text="${operatori}"></div>
+			<label for="operatore">Operatore Assegnato</label>
+			<select id="operatore" name="operatore" th:field="*{operatore}">
+				<option value="">Seleziona un operatore</option>
+				<!-- Lista dinamica degli operatori -->
+				<option th:each="operatore : ${allOperatori}" th:value="${operatore.id}"
+					th:text="${operatore.username}" required>
+				</option>
+			</select>
+
+			<button type="submit">Modifica Ticket</button>
+		</form>
+
+		<a href="/tickets" class="back-btn">Torna all'elenco</a>
+	</div>
+	<div th:replace="~{fragments :: scripts}"></div>
 </body>
+
 </html>

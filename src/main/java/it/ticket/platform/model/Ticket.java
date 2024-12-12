@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import it.ticket.platform.model.Categoria;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -26,26 +26,22 @@ public class Ticket {
 	@NotBlank(message = "La descrizione non può essere vuota")
 	private String descrizione;
 
-	@NotNull(message = "Lo stato non può essere nullo")
-	@NotBlank(message = "Lo stato non può essere vuoto")
 	private String stato;
 
-	@NotNull(message = "La data di apertura ticket non può essere vuota")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@FutureOrPresent
 	private LocalDateTime dataCreazione;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@FutureOrPresent
 	private LocalDateTime dataModifica;
 
 	@ManyToOne
 	@JoinColumn(name = "operatore_id", nullable = false)
 	private Operatore operatore;
-
+	
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
 	private Categoria categoria;
+	
 
 	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Nota> note = new ArrayList<>();
@@ -104,7 +100,7 @@ public class Ticket {
 	public void setDataModifica(LocalDateTime dataModifica) {
 		this.dataModifica = dataModifica;
 	}
-
+	
 	public Operatore getOperatore() {
 		return operatore;
 	}
@@ -120,8 +116,6 @@ public class Ticket {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
-	
-	
 
 	public List<Nota> getNote() {
 		return note;
@@ -141,11 +135,13 @@ public class Ticket {
 
 	@Override
 	public String toString() {
-		return "Ticket{" + "id=" + id + ", titolo='" + titolo + '\'' + ", descrizione='" + descrizione + '\''
-				+ ", stato='" + stato + '\'' + ", dataCreazione=" + dataCreazione + ", dataModifica=" + dataModifica
-				+ ", operatore=" + (operatore != null ? operatore.getId() : null) + ", categoria="
-				+ (categoria != null ? categoria.getId() : null) + '}';
+		 return "Ticket [id=" + id + ", titolo=" + titolo + ", descrizione=" + descrizione + ", stato=" + stato
+		            + ", dataCreazione=" + dataCreazione + ", dataModifica=" + dataModifica
+		            + ", operatoreId=" + (operatore != null ? operatore.getId() : "null") 
+		            + ", categoria=" + (categoria != null ? categoria.getId() : "null") 
+		            + ", note=" + (note != null ? note.size() : 0) 
+		            + ", adminId=" + (admin != null ? admin.getId() : "null") + "]"; 
 	}
 
-
+	
 }

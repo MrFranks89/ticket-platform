@@ -48,10 +48,10 @@ public class AdminRestController {
         return admin.getTickets();
     }
 
-    @PostMapping("/{adminId}/tickets")
-    public Ticket createTicket(@PathVariable Long adminId, @RequestBody Ticket ticket) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin non trovato con id: " + adminId));
+    @PostMapping("/{id}/tickets")
+    public Ticket createTicket(@PathVariable Long id, @RequestBody Ticket ticket) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin non trovato con id: " + id));
         ticket.setAdmin(admin);
         return ticketRepository.save(ticket);
     }

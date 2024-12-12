@@ -30,7 +30,7 @@ public class NotaService {
 		Ticket ticket = ticketRepository.findById(ticketId)
 				.orElseThrow(() -> new EntityNotFoundException("Ticket non trovato con id: " + ticketId));
 
-		Operatore autore = ticket.getOperatore();
+		Operatore autore = (Operatore) ticket.getOperatore();
 		
 		  if (autore == null) {
 	            throw new EntityNotFoundException("Operatore non trovato per il ticket con id: " + ticketId);

@@ -2,9 +2,6 @@ package it.ticket.platform.model;
 
 import java.util.List;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import it.ticket.platform.repository.UserDetailsSource;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +11,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Admin implements UserDetailsSource {
+public class Admin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +26,6 @@ public class Admin implements UserDetailsSource {
 	private String email;
 
 	private String password;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	private List<Roles> roles;
 	
 	@OneToMany(mappedBy = "admin", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
@@ -99,18 +93,6 @@ public class Admin implements UserDetailsSource {
 		this.tickets = tickets;
 	}
 
-	
-
-	public List<Roles> getRoles() {
-		return roles;
-	}
-
-
-	public void setRoles(List<Roles> roles) {
-		this.roles = roles;
-	}
-
-
 	public String getRuolo() {
 		return ruolo;
 	}
@@ -121,18 +103,10 @@ public class Admin implements UserDetailsSource {
 	}
 
 
-	public Admin(Long id, String nome, String cognome, String username, String email, String password,
-			List<Roles> roles, List<Ticket> tickets, String ruolo) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.cognome = cognome;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.roles = roles;
-		this.tickets = tickets;
-		this.ruolo = ruolo;
+	@Override
+	public String toString() {
+		return "Admin [id=" + id + ", nome=" + nome + ", cognome=" + cognome + ", username=" + username + ", email="
+				+ email + ", password=" + password + ", tickets=" + tickets + ", ruolo=" + ruolo + "]";
 	}
 
 

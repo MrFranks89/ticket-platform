@@ -2,7 +2,6 @@ package it.ticket.platform.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +42,7 @@ public class OperatoreRestController {
 		List<Ticket> assignedTickets = new ArrayList<>();
 
 		for (Ticket ticket : allTickets) {
-			if (ticket.getOperatore() != null && ticket.getOperatore().getId().equals(operatore.getId())) {
+			if (ticket.getOperatore() != null && ((Operatore) ticket.getOperatore()).getId().equals(getOperatoreById(id))) {
 				assignedTickets.add(ticket);
 			}
 		}
@@ -56,7 +55,7 @@ public class OperatoreRestController {
 		Ticket ticket = ticketRepository.findById(ticketId)
 				.orElseThrow(() -> new EntityNotFoundException("Ticket non trovato con id: " + ticketId));
 
-		if (ticket.getOperatore() != null && ticket.getOperatore().getId().equals(operatoreId)) {
+		if (ticket.getOperatore() != null && ((Operatore) ticket.getOperatore()).getId().equals(operatoreId)) {
 			return ticket;
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN,

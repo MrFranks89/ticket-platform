@@ -1,5 +1,6 @@
 package it.ticket.platform.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,61 +18,94 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import it.ticket.platform.model.Admin;
+import it.ticket.platform.model.Operatore;
 import it.ticket.platform.model.Ticket;
+import it.ticket.platform.repository.AdminRepository;
+import it.ticket.platform.repository.OperatoreRepository;
 import it.ticket.platform.repository.TicketRepository;
 import it.ticket.platform.service.TicketService;
+import it.ticket.platform.model.TicketAssignmentRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/tickets")
 public class TicketRestController {
 
-    @Autowired
-    private TicketService ticketService;
-    
-    @Autowired
-    private TicketRepository ticketRepository;
-    
-    private static final Logger logger = LoggerFactory.getLogger(TicketRestController.class);
+	@Autowired
+	private TicketService ticketService;
+	@Autowired
+	private TicketRepository ticketRepository;
+	@Autowired
+	private AdminRepository adminRepository;
+	@Autowired
+	private OperatoreRepository operatoreRepository;
 
-    @GetMapping("/")
-    public ResponseEntity<List<Ticket>> index(@RequestParam(name = "keyword", required = false) String keyword) {
-        try {
-            if (keyword != null && !keyword.isBlank()) {
-                List<Ticket> tickets = ticketRepository.findByTitoloContaining(keyword);
-                return new ResponseEntity<>(tickets, HttpStatus.OK);
-            } else {
-                List<Ticket> tickets = ticketRepository.findAll();
-                return ResponseEntity.ok(tickets);
-            }
-        } catch (Exception e) {
-            logger.error("Errore durante il recupero delle pizze", e);
-            return ResponseEntity.badRequest().build();
-        }
-    }
+	private static final Logger logger = LoggerFactory.getLogger(TicketRestController.class);
 
-    // API per creare un nuovo ticket
-    @PostMapping
-    public Ticket createTicket(@RequestBody Ticket ticket) {
-        return ticketService.createTicket(ticket);
-    }
+	@GetMapping("/")
+	public ResponseEntity<List<Ticket>> index(@RequestParam(name = "keyword", required = false) String keyword) {
+		try {
+			if (keyword != null && !keyword.isBlank()) {
+				List<Ticket> tickets = ticketRepository.findByTitoloContaining(keyword);
+				return new ResponseEntity<>(tickets, HttpStatus.OK);
+			} else {
+				List<Ticket> tickets = ticketRepository.findAll();
+				return ResponseEntity.ok(tickets);
+			}
+		} catch (Exception e) {
+			logger.error("Errore durante il recupero delle pizze", e);
+			return ResponseEntity.badRequest().build();
+		}
+	}
 
-    // API per aggiornare un ticket
-    @PutMapping("/{id}")
-    public Ticket updateTicket(@PathVariable Long id, @RequestBody Ticket updatedTicket) {
-        return ticketService.updateTicket(id, updatedTicket);
-    }
+	@PutMapping("/tickets/assign")
+	public Ticket assignTicketToOperator(@Valid @RequestBody TicketAssignmentRequest request) {
 
-    // API per aggiornare solo lo stato di un ticket
-    @PutMapping("/{id}/stato")
-    public Ticket updateStato(@PathVariable Long id, @RequestParam String nuovoStato) {
-        return ticketService.updateStato(id, nuovoStato);
-    }
+		Admin admin = adminRepository.findById(request.getAdminId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"Admin non trovato con id: " + request.getAdminId()));
 
-    // API per eliminare un ticket
-    @DeleteMapping("/{id}")
-    public void deleteTicket(@PathVariable Long id) {
-        ticketService.deleteTicket(id);
-    }
+
+		Ticket ticket = ticketRepository.findById(request.getTicketId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"Ticket non trovato con id: " + request.getTicketId()));
+
+
+		Operatore operatore = operatoreRepository.findById(request.getOperatoreId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"Operatore non trovato con id: " + request.getOperatoreId()));
+
+
+		ticket.setOperatore(operatore);
+		ticket.setDataModifica(LocalDateTime.now()); 
+
+		return ticketRepository.save(ticket);
+	}
+
+
+	@PostMapping
+	public Ticket createTicket(@RequestBody Ticket ticket) {
+		return ticketService.createTicket(ticket);
+	}
+
+
+	@PutMapping("/{id}")
+	public Ticket updateTicket(@PathVariable Long id, @RequestBody Ticket updatedTicket) {
+		return ticketService.updateTicket(id, updatedTicket);
+	}
+
+
+	@PutMapping("/{id}/stato")
+	public Ticket updateStato(@PathVariable Long id, @RequestParam String nuovoStato) {
+		return ticketService.updateStato(id, nuovoStato);
+	}
+
+	@DeleteMapping("/{id}")
+	public void deleteTicket(@PathVariable Long id) {
+		ticketService.deleteTicket(id);
+	}
 }

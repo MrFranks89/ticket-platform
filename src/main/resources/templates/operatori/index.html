@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Operatori</title>
+	<div th:replace="~{fragments :: head}"></div>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 
+	<nav th:replace="~{navbar :: navbar('operatori')}"> </nav>
 <!-- Barra di navigazione -->
 <nav>
     <ul>
         <li><a href="/home">Home</a></li>
         <li><a href="/operatori">Operatori</a></li>
-        <li><a href="/ticket">Ticket</a></li>
+        <li><a href="/tickets">Ticket</a></li>
         <li><a href="/logout">Logout</a></li>
     </ul>
 </nav>
@@ -56,5 +58,5 @@
     </div>
 
 </div>
-
+<div th:replace="~{fragments :: scripts}"></div>
 </body>
