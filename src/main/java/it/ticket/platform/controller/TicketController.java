@@ -47,7 +47,7 @@ public class TicketController {
 
 	@Autowired
 	private AdminRepository adminRepository;
-	
+
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 
@@ -101,8 +101,7 @@ public class TicketController {
 
 		ticket.setStato("da fare");
 		List<Operatore> operatoreDisponibile = operatoreRepository.findByDisponibile(true);
-		
-		
+
 		model.addAttribute("ticket", new Ticket());
 		model.addAttribute("allOperatori", operatoreDisponibile);
 		return "tickets/create";
@@ -124,30 +123,30 @@ public class TicketController {
 		if (formTicket.getStato() == null || formTicket.getStato().isEmpty()) {
 			formTicket.setStato("da fare");
 		}
-		
+
 		if (formTicket.getCategoria() == null) {
 			bindingResult.rejectValue("categoria", "error.categoria", "La categoria non può essere vuota");
 			return "tickets/create";
 		}
-		
+
 		if (formTicket.getCategoria() != null && formTicket.getCategoria().getId() != null) {
-	      
-	        Categoria categoria = categoriaRepository.findById(formTicket.getCategoria().getId())
-	                                                 .orElseThrow(() -> new IllegalArgumentException("Categoria non trovata"));
-	     
-	        formTicket.setCategoria(categoria);
-	    } else {
-	        bindingResult.rejectValue("categoria", "error.categoria", "La categoria non può essere vuota");
-	        return "tickets/create";
-	    }
-		
+
+			Categoria categoria = categoriaRepository.findById(formTicket.getCategoria().getId())
+					.orElseThrow(() -> new IllegalArgumentException("Categoria non trovata"));
+
+			formTicket.setCategoria(categoria);
+		} else {
+			bindingResult.rejectValue("categoria", "error.categoria", "La categoria non può essere vuota");
+			return "tickets/create";
+		}
+
 		if (formTicket.getAdmin() == null) {
-	        String adminUsername = "f_franchi";
-	        Admin admin = adminRepository.findByUsername(adminUsername)
-	                                     .orElseThrow(() -> new IllegalArgumentException("Admin non trovato"));
-	        formTicket.setAdmin(admin);
-	    }
-		
+			String adminUsername = "f_franchi";
+			Admin admin = adminRepository.findByUsername(adminUsername)
+					.orElseThrow(() -> new IllegalArgumentException("Admin non trovato"));
+			formTicket.setAdmin(admin);
+		}
+
 		System.out.println(formTicket);
 
 		ticketRepo.save(formTicket);
@@ -199,21 +198,29 @@ public class TicketController {
 		redirectAttributes.addFlashAttribute("successMessage", "Ticket eliminato con successo!");
 		return "redirect:/tickets";
 	}
-	
+
 	@PostMapping("/updateTicketStatus/{id}")
-    public String updateTicketStatus(@PathVariable Long id, @RequestParam String stato, RedirectAttributes redirectAttributes) {
-        Ticket ticket = ticketRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket non trovato con id: " + id));
+	public String updateTicketStatus(@PathVariable Long id, @RequestParam String stato,
+			RedirectAttributes redirectAttributes) {
+		Ticket ticket = ticketRepo.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Ticket non trovato con id: " + id));
 
-        if (ticket.getOperatore() != null && ticket.getOperatore().getId().equals(operatoreRepository.findById(id).get().getId())) {
-            ticket.setStato(stato);
-            ticketRepo.save(ticket);
-            redirectAttributes.addFlashAttribute("successMessage", "Stato del ticket aggiornato con successo!");
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Non hai i permessi per modificare questo ticket.");
-        }
+		Operatore operatoreAssociato = ticket.getOperatore();
+		if (operatoreAssociato != null) {
 
-        return "redirect:/tickets";
-    }
+			if (operatoreAssociato.getId().equals(operatoreAssociato.getId())) {
+				ticket.setStato(stato);
+				ticketRepo.save(ticket);
+				redirectAttributes.addFlashAttribute("successMessage", "Stato del ticket aggiornato con successo!");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage",
+						"Non hai i permessi per modificare questo ticket.");
+			}
+		} else {
+			redirectAttributes.addFlashAttribute("errorMessage", "Questo ticket non ha un operatore assegnato.");
+		}
+
+		return "redirect:/operatori/{id}"; // Redirect alla pagina dell'operatore
+	}
 
 }

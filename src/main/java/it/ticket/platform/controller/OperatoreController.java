@@ -41,8 +41,11 @@ public class OperatoreController {
 	            .orElseThrow(() -> new EntityNotFoundException("Operatore non trovato con id: " + id));
 		model.addAttribute("operatore", operatore);
 		
+		
 		List<Ticket> assignedTickets = ticketRepository.findByOperatoreId(id);
+		System.out.println("Assigned tickets: " + assignedTickets);
         model.addAttribute("assignedTickets", assignedTickets);
+        
 
 		return "operatori/show";
 	}

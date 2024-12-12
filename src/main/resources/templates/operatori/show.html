@@ -38,38 +38,44 @@
 	</form>
 
     <div class="ticket-list">
-        <h2>Ticket Assegnati</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Descrizione</th>
-                    <th>Data di creazione</th>
-                    <th>Stato</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="ticket : ${assignedTickets}">
-                    <td th:text="${ticket.id}"></td>
-                    <td th:text="${ticket.descrizione}"></td>
-                    <td th:text="${ticket.dataCreazione}"></td>
-                    <td th:text="${ticket.stato}"></td>
-                </tr>
-            </tbody>
-        </table>
+		<h2>Ticket Assegnati</h2>
+		<table class="table">
+		    <thead>
+		        <tr>
+		            <th>Ticket ID</th>
+		            <th>Titolo</th>
+		            <th>Descrizione</th>
+		            <th>Stato</th>
+		            <th>Azione</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <tr th:each="ticket : ${assignedTickets}">
+		            <td th:text="${ticket.id}">ID Ticket</td>
+		            <td th:text="${ticket.titolo}">Titolo Ticket</td>
+		            <td th:text="${ticket.descrizione}">Descrizione Ticket</td>
+		            <td th:text="${ticket.stato}">Stato Ticket</td>
+		            <td>
+		                <!-- Form per aggiornare lo stato del ticket -->
+		                <form th:action="@{/tickets/updateTicketStatus/{id}(id=${ticket.id})}" method="post">
+		                    <div class="form-group">
+		                        <label for="stato">Stato</label>
+		                        <select id="stato" name="stato" class="form-select">
+		                            <option th:selected="${ticket.stato == 'da fare'}" th:value="'da fare'">Da Fare</option>
+		                            <option th:selected="${ticket.stato == 'in corso'}" th:value="'in corso'">In Corso</option>
+		                            <option th:selected="${ticket.stato == 'completato'}" th:value="'completato'">Completato</option>
+		                        </select>
+		                    </div>
+		                    <button type="submit" class="btn btn-primary">Aggiorna Stato</button>
+		                </form>
+		            </td>
+		        </tr>
+				<tr th:if="${assignedTickets.isEmpty()}">
+				               <td colspan="5">Nessun ticket assegnato.</td>
+				           </tr>
+		    </tbody>
+		</table>
     </div>
-	
-	<form action="#" th:action="@{/tickets/updateTicketStatus/{id}(id=${ticket.id})}" method="post">
-	    <div class="form-group">
-	        <label for="stato">Stato del Ticket</label>
-	        <select id="stato" name="stato" class="form-select">
-	            <option th:selected="${ticket.stato == 'da fare'}" th:value="da fare">Da Fare</option>
-	            <option th:selected="${ticket.stato == 'in corso'}" th:value="in corso">In Corso</option>
-	            <option th:selected="${ticket.stato == 'completato'}" th:value="completato">Completato</option>
-	        </select>
-	    </div>
-	    <button type="submit" class="btn btn-primary">Aggiorna Stato del ticket</button>
-	</form>
 
 </div>
 <div th:replace="~{fragments :: scripts}"></div>
